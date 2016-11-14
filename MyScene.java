@@ -11,6 +11,8 @@ public class MyScene {
 	// 旗と車を1個ずつ定義する
 	static MyFlag flag1 = null;
 	static MyCar car1 = null;
+	//static MyBicycle bicycle1 = null;//Bicycle追加
+	static MyDonut donut1 = null;
 	
 	/**
 	 * シーンの初期化
@@ -20,11 +22,16 @@ public class MyScene {
 		 // 旗の初期化
 		 flag1 = new MyFlag();
 		 
-		 // 車の初期化および色・速度・変位の設定
+		 
+		 // 車の初期化および色・速度・変位の設定
 		 car1 = new MyCar();
 		 car1.setColor(1.0, 0.0, 0.0);
 		 car1.setVelocity(5);
 		 car1.setTransform(1.5);
+		
+
+		 //とりあえず自転車を表示させておく
+		 donut1 = new MyDonut();
 
 	}
 	
@@ -38,7 +45,7 @@ public class MyScene {
 
 		 // 物体が裏面を向いていたとしても光を当てる
 		 gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE); 
-		
+		/*
 	    // 旗を描画する
 	    gl.glPushMatrix();
 	    if(flag1 != null)
@@ -46,11 +53,18 @@ public class MyScene {
 	    gl.glPopMatrix();
 	 
 	    // 車を描画する
+	    
 		gl.glPushMatrix();
 	    if(car1 != null)
 	    	car1.draw(drawable);
 	    gl.glPopMatrix();
 	  
+	  */
+	    // ドーナツを描画する
+		gl.glPushMatrix();
+	    if(car1 != null)
+	    	donut1.draw(drawable);
+	    gl.glPopMatrix();	  
 	}
 	
 	/**

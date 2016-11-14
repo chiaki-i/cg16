@@ -11,7 +11,7 @@ import javax.media.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 
 public class CgMain extends JApplet {
-	static int width = 600;
+	static int width = 800;
 	static int height = 650;
 	static Animator animator;
 
@@ -68,7 +68,7 @@ public class CgMain extends JApplet {
 	 * メインメソッド
 	 */
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("I love CG!!!");
+		JFrame frame = new JFrame("um...");
 		frame.setSize(width, height);
 		CgMain cgmain = new CgMain(); 
 

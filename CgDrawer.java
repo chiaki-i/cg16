@@ -10,13 +10,15 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLEventListener;
 
+import java.lang.Math;
+
 
 public class CgDrawer implements GLEventListener {
 	GLAutoDrawable glAD;
 	
 	// 光源の位置を設定
-	static float light0pos[] = { 0.0f, -3.0f, -5.0f, 1.0f };
-	static float light1pos[] = { 5.0f, 3.0f, 3.0f, 1.0f };
+	static float light0pos[] = { 0.0f, -6.0f, -10.0f, 1.0f };//画面右下から当てる光
+	static float light1pos[] = { -10.0f, 6.0f, 0.0f, 1.0f };//画面左上から当てる光
 
 
 	
@@ -46,8 +48,8 @@ public class CgDrawer implements GLEventListener {
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, silver, 0);
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, silver, 0);
         
-        // 背景色を黒にする
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        // 背景色を白にする
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
 	}
     
@@ -105,26 +107,63 @@ public class CgDrawer implements GLEventListener {
 	 * 物体を描画するときに呼び出されるメソッド
 	 */
 	public void draw(GLAutoDrawable drawable) {
-		 GL2 gl = drawable.getGL().getGL2();
-		 GLUgl2 glu = new GLUgl2();
+		GL2 gl = drawable.getGL().getGL2();
+		GLUgl2 glu = new GLUgl2();
 
-		 // ウィンドウをクリアする
-		 gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		// ウィンドウをクリアする
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-		 // 幾何変換のための行列を初期化する
-	     gl.glLoadIdentity();
+		// 幾何変換のための行列を初期化する
+		gl.glLoadIdentity();
 
 		// 視点を設定する
-		 glu.gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); 
+		glu.gluLookAt(20.0f, 20.0f, 50.0f,  /* カメラの座標 */
+									0.0f, 0.0f, 0.0f, 	/* 注視点の座標 */
+									0.0f, 1.0f, 0.0f);  /* 画面の上方向を指すベクトル */
 		
 
-		 // 光源の位置を設定する
-		 gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light0pos, 0);
-		 gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, light1pos, 0);
+		// 光源の位置を設定する
+		//gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light0pos, 0);
+		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, light1pos, 0);
 		
-		 // シーンを描画する
-		 MyScene.draw(drawable);
-		 
+		// シーンを描画する
+		MyScene.draw(drawable);
+
+	}
+
+	public void cylinder(float radius, float height, int sides, GLAutoDrawable drawable){
+		GL2 gl = drawable.getGL().getGL2();
+		GLUgl2 glu = new GLUgl2();
+		double pi = 3.1415;
+		float x = 0.0f, y = 0.0f, z = 0.0f;
+		
+		//上面
+		gl.glNormal3d(0.0, 1.0, 0.0);//法線ベクトル。Y軸正方向が上となる。
+		gl.glBegin(GL2.GL_POLYGON);
+		for(double i = sides; i >= 0; --i) {
+			double t = pi*2/sides * (double)i;
+			gl.glVertex3d(x + radius*Math.cos(t), y + height, z + radius*Math.sin(t));
+		}
+		gl.glEnd();
+
+		//側面
+		gl.glBegin(GL2.GL_QUAD_STRIP);
+		for(double i = 0; i <= sides; i = i+1){
+			double t = i*2*pi/sides;
+			gl.glNormal3f( (float)Math.cos(t), 0.0f, (float)Math.sin(t) );//法線ベクトルの設定。面の外向き方向へのベクトル。
+			gl.glVertex3f( x + radius*(float)Math.cos(t), y - height, z + radius*(float)Math.sin(t) );
+			gl.glVertex3f( x + radius*(float)Math.cos(t), y + height, z + radius*(float)Math.sin(t) );
+		}
+		gl.glEnd();
+
+		//下面
+		gl.glNormal3d(0.0, -1.0, 0.0);//法線ベクトル。Y軸負方向が上となる。
+		gl.glBegin(GL2.GL_POLYGON);
+		for(double i = 0; i < sides; i++) {
+			double t = pi*2/sides*(double)i;
+			gl.glVertex3d( x + radius*Math.cos(t), y - height, z + radius*Math.sin(t) );
+		}
+		gl.glEnd();
 	}
 	
 	
