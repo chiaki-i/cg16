@@ -17,8 +17,8 @@ public class CgDrawer implements GLEventListener {
 	GLAutoDrawable glAD;
 	
 	// 光源の位置を設定
-	static float light0pos[] = { 0.0f, -6.0f, -10.0f, 1.0f };//画面右下から当てる光
-	static float light1pos[] = { -10.0f, 6.0f, 0.0f, 1.0f };//画面左上から当てる光
+	static float light0pos[] = { 0.0f, 0.0f, -100.0f, 1.0f };//画面右下から当てる光
+	static float light1pos[] = { -100.0f, 100.0f, -50.0f, 1.0f };//画面左上から当てる光
 
 
 	
@@ -26,7 +26,7 @@ public class CgDrawer implements GLEventListener {
 	 * 描画処理のための初期化
 	 */
     public void init(GLAutoDrawable drawable) {
-        float silver[] = {0.5f, 0.5f, 0.5f, 1.0f};
+        float silver[] = {0.2f, 0.2f, 0.2f, 1.0f};
     	
         this.glAD = drawable;
       
@@ -49,7 +49,7 @@ public class CgDrawer implements GLEventListener {
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, silver, 0);
         
         // 背景色を白にする
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         
 	}
     
@@ -71,6 +71,9 @@ public class CgDrawer implements GLEventListener {
         // ここから投影変換に関する設定
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
+        //glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
+        //http://www.wakayama-u.ac.jp/~wuhy/GSS/04.htmlここみて
+        gl.glFrustum(200.0, 200.0, 100.0, 120.0, 50.0, 1000.0);
         glu.gluPerspective(30.0, h, 1.0, 100.0);
                
         // ここから物体の幾何変換に関する設定
@@ -117,7 +120,7 @@ public class CgDrawer implements GLEventListener {
 		gl.glLoadIdentity();
 
 		// 視点を設定する
-		glu.gluLookAt(10.0f, 20.0f, 50.0f,  /* カメラの座標 */
+		glu.gluLookAt(50.0f, 20.0f, 50.0f,  /* カメラの座標 */
 									0.0f, 0.0f, 0.0f, 	/* 注視点の座標 */
 									0.0f, 1.0f, 0.0f);  /* 画面の上方向を指すベクトル */
 		
@@ -166,12 +169,12 @@ public class CgDrawer implements GLEventListener {
 		gl.glEnd();
 	}
 	
-	public void elipsoid(int uiStacks, int uiSlices, float fA, float fB, float fC,GLAutoDrawable drawable){
+	public void elipsoid(int stacks, int slices, float fA, float fB, float fC,GLAutoDrawable drawable){
 		GL2 gl = drawable.getGL().getGL2();
 		GLUgl2 glu = new GLUgl2();
 
-		float tStep = (float)Math.PI / (float)uiSlices;
-		float sStep = (float)Math.PI / (float)uiStacks;
+		float tStep = (float)Math.PI / (float)slices;
+		float sStep = (float)Math.PI / (float)stacks;
 
 		//gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		for(float t = -(float)Math.PI/2; t <= ((float)Math.PI/2)+.0001; t += tStep){
@@ -183,7 +186,19 @@ public class CgDrawer implements GLEventListener {
 			gl.glEnd();
 		}
 	}
+/*
+	public void mytube(int slices, ){
+		GL2 gl = drawable.getGL().getGL2();
+		GLUgl2 glu = new GLUgl2();
+
+		//関数引数はとりあえず保留にして、関数をここで定義することにする
+		for (int i = 0; i < slices; i++) {
+						
+		}
+
+	}
 	
+	*/
 	public GLAutoDrawable getGLAutoDrawable() {
 		return glAD;
 	}
