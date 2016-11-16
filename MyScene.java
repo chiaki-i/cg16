@@ -9,10 +9,12 @@ import javax.media.opengl.GLAutoDrawable;
 public class MyScene {
 
 	// 旗と車を1個ずつ定義する
+	
 	static MyFlag flag1 = null;
 	static MyCar car1 = null;
-	//static MyBicycle bicycle1 = null;//Bicycle追加
-	static MyDonut donut1 = null;
+	
+	static MyMountainBike bike1 = null;
+
 	
 	/**
 	 * シーンの初期化
@@ -31,7 +33,7 @@ public class MyScene {
 		
 
 		 //とりあえず自転車を表示させておく
-		 donut1 = new MyDonut();
+		 bike1 = new MyMountainBike();
 
 	}
 	
@@ -62,9 +64,8 @@ public class MyScene {
 	  */
 	    // ドーナツを描画する
 		gl.glPushMatrix();
-	    if(car1 != null)
-	    	donut1.draw(drawable);
-	    gl.glPopMatrix();	  
+	    if(car1 != null) bike1.draw(drawable);
+	   gl.glPopMatrix();	  
 	}
 	
 	/**

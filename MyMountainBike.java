@@ -5,13 +5,15 @@ import javax.media.opengl.GLAutoDrawable;
 import com.jogamp.opengl.util.gl2.GLUT;
 import java.lang.Math;
 
-public class MyDonut{
+public class MyMountainBike{
 
 	float sunflower[]  = { 1.0f, 0.945098039f, 0.058823529f, 1.0f };
 	float darkgreen[]  = { 0.156862745f, 0.639215686f, 0.043137255f, 1.0f };
 	float olive[]      = { 0.388235294f, 0.48627451f, 0.207843137f, 1.0f };
 	float silvergray[] = { 0.647058824f, 0.647058824f, 0.647058824f, 1.0f };
 	float black[]      = { 0.149019608f, 0.149019608f, 0.149019608f, 1.0f };
+
+	float degree10 = 10.0f/180*(float)Math.PI;
 
 	public void draw(GLAutoDrawable drawable){
 		GL2 gl = drawable.getGL().getGL2();
@@ -37,13 +39,14 @@ public class MyDonut{
 		gl.glPopMatrix();
 		*/
 
+		
 		// パイプ１本目 z軸周りに回転 = xy平面上での原点中心回転
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, darkgreen, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, darkgreen, 0);
 		gl.glPushMatrix();
 			float pipe1_length = size*3.0f;
-			float pipe1_xtrans = pipe1_length*(float)Math.cos(10.0f/180*Math.PI);
-			float pipe1_ytrans = pipe1_length*(float)Math.sin(10.0f/180*Math.PI);
+			float pipe1_xtrans = pipe1_length*(float)Math.cos(degree10);
+			float pipe1_ytrans = pipe1_length*(float)Math.sin(degree10);
 			gl.glTranslatef(pipe1_xtrans, pipe1_ytrans, 0);
 			gl.glRotatef(-80.0f,0,0,1);
 			drawer.cylinder(pipe_width,pipe1_length,4,drawable);
@@ -52,8 +55,8 @@ public class MyDonut{
 		// パイプ２本目
 		gl.glPushMatrix();
 			float pipe2_length = size*2.0f;
-			float pipe2_xtrans = pipe2_length*(float)Math.sin(10.0f/180*Math.PI);
-			float pipe2_ytrans = -pipe2_length*(float)Math.cos(10.0f/180*Math.PI);
+			float pipe2_xtrans = pipe2_length*(float)Math.sin(degree10);
+			float pipe2_ytrans = -pipe2_length*(float)Math.cos(degree10);
 			gl.glTranslatef(pipe2_xtrans, pipe2_ytrans, 0);
 			gl.glRotatef(10.0f,0,0,1);
 			drawer.cylinder(pipe_width,pipe2_length,4,drawable);
@@ -74,10 +77,10 @@ public class MyDonut{
 
 		// 4本目 後輪パイプ ＋Z側 下の1本目
 		gl.glPushMatrix();
-			float pipe4_length = size*(1.0f/(float)Math.sin(10.0f/180*Math.PI))/2.0f;
+			float pipe4_length = size*(1.0f/(float)Math.sin(degree10))/2.0f;
 			float pipe4_xtrans = 2*pipe2_xtrans - pipe4_length;
 			float pipe4_ytrans = 2*pipe2_ytrans;
-			gl.glTranslatef(0, 0, pipe4_length*(float)Math.sin(10.0f/180*Math.PI));
+			gl.glTranslatef(0, 0, pipe4_length*(float)Math.sin(degree10));
 			gl.glRotatef(10.0f, 1,1,0);
 			gl.glTranslatef(pipe4_xtrans, pipe4_ytrans, 0);
 			gl.glRotatef(90.0f, 0,0,1);
@@ -90,7 +93,7 @@ public class MyDonut{
 			float pipe5_length = size*(float)Math.sqrt( (float)Math.pow(pipe2_length,2) + (float)Math.pow(pipe4_length,2) - 2.0f*pipe2_length*pipe4_length*(float)Math.cos(80.0f/180*Math.PI) );
 			float pipe5_xtrans = (pipe4_xtrans - pipe5_length/2.0f)/2.0f - 0.6f;
 			float pipe5_ytrans = pipe4_ytrans/2.0f;
-			gl.glTranslatef(0, 0, pipe4_length*(float)Math.sin(10.0f/180*Math.PI));
+			gl.glTranslatef(0, 0, pipe4_length*(float)Math.sin(degree10));
 			gl.glRotatef(10.0f, 1,1,0);
 			gl.glTranslatef(pipe5_xtrans, pipe5_ytrans, 0);
 			gl.glRotatef(-53.0f, 0,0,1);
@@ -99,7 +102,7 @@ public class MyDonut{
 
 		//6本目 後輪パイプ -Z側 下 基本は4本目と同じ。
 		gl.glPushMatrix();
-			gl.glTranslatef(0, 0, -pipe4_length*(float)Math.sin(10.0f/180*Math.PI));
+			gl.glTranslatef(0, 0, -pipe4_length*(float)Math.sin(degree10));
 			gl.glRotatef(-10.0f, 1,1,0);
 			gl.glTranslatef(pipe4_xtrans, pipe4_ytrans, 0);
 			gl.glRotatef(90.0f, 0,0,1);
@@ -108,7 +111,7 @@ public class MyDonut{
 
 		// 7本目 後輪パイプ -Z側 上 基本は5本目と同じ。
 		gl.glPushMatrix();
-			gl.glTranslatef(0, 0, -pipe4_length*(float)Math.sin(10.0f/180*Math.PI));
+			gl.glTranslatef(0, 0, -pipe4_length*(float)Math.sin(degree10));
 			gl.glRotatef(-10.0f, 1,1,0);
 			gl.glTranslatef(pipe5_xtrans, pipe5_ytrans, 0);
 			gl.glRotatef(-53.0f, 0,0,1);
@@ -127,10 +130,10 @@ public class MyDonut{
 
 		// 9本目 前輪  +Z軸側 
 		gl.glPushMatrix();
-			float pipe9_length = ( pipe1_length*(float)Math.sin(10.0f/180*Math.PI)+Math.abs(pipe4_ytrans) ) / (float)Math.cos(10.0f/180*Math.PI)* 0.5f;
+			float pipe9_length = ( pipe1_length*(float)Math.sin(degree10)+Math.abs(pipe4_ytrans) ) / (float)Math.cos(degree10)* 0.5f;
 			float pipe9_xtrans = pipe8_xtrans + pipe2_xtrans*1.1f;
 			float pipe9_ytrans = pipe4_ytrans/2.0f + 0.3f;
-			gl.glTranslatef(0, 0, pipe4_length*(float)Math.sin(10.0f/180*Math.PI));
+			gl.glTranslatef(0, 0, pipe4_length*(float)Math.sin(degree10));
 			gl.glTranslatef(pipe9_xtrans, pipe9_ytrans, 0);
 			gl.glRotatef(10.0f,0,0,1);
 			drawer.cylinder(pipe_width,pipe9_length,4,drawable);
@@ -138,7 +141,7 @@ public class MyDonut{
 
 		// 10本目 前輪  -Z軸側 
 		gl.glPushMatrix();
-			gl.glTranslatef(0, 0, -pipe4_length*(float)Math.sin(10.0f/180*Math.PI));
+			gl.glTranslatef(0, 0, -pipe4_length*(float)Math.sin(degree10));
 			gl.glTranslatef(pipe9_xtrans, pipe9_ytrans, 0);
 			gl.glRotatef(10.0f,0,0,1);
 			drawer.cylinder(pipe_width,pipe9_length,4,drawable);
@@ -150,7 +153,7 @@ public class MyDonut{
 
 		// 後輪の車軸
 		gl.glPushMatrix();
-			float piperear_length = pipe4_length*(float)Math.sin(10.0f/180*Math.PI)*2;// Z軸方向の差を計算。
+			float piperear_length = pipe4_length*(float)Math.sin(degree10)*2;// Z軸方向の差を計算。
 			float piperear_xtrans = 2*pipe2_xtrans - 2*pipe4_length;
 			gl.glTranslatef(piperear_xtrans, pipe4_ytrans, 0);
 			gl.glRotatef(90.0f, 1,0,0);// ZY平面上で倒したいので、X軸回転ということになる。
@@ -159,7 +162,7 @@ public class MyDonut{
 
 		// 前輪の車軸
 		gl.glPushMatrix();
-			float pipefront_xtrans = pipe1_length*(float)Math.cos(10.0f/180*Math.PI)*2 + pipe9_length*(float)Math.sin(10.0f/180*Math.PI)*2;
+			float pipefront_xtrans = pipe1_length*(float)Math.cos(degree10)*2 + pipe9_length*(float)Math.sin(degree10)*2;
 			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
 			gl.glRotatef(90.0f, 1,0,0);// ZY平面上で倒したいので、X軸回転ということになる。
 			drawer.cylinder(pipe_width*2.0f,piperear_length,8,drawable);
@@ -168,7 +171,7 @@ public class MyDonut{
 		// 前輪 カラーパイプ連結部
 		gl.glPushMatrix();
 			float pipejoint_length = piperear_length/2.0f;
-			float pipejoint_xtrans = pipe1_length*(float)Math.cos(10.0f/180*Math.PI)*2 + 0.1f;
+			float pipejoint_xtrans = pipe1_length*(float)Math.cos(degree10)*2 + 0.1f;
 			gl.glTranslatef(pipejoint_xtrans, pipe1_ytrans, 0);
 			gl.glRotatef(90.0f, 1,0,0);// ZY平面上で倒したいので、X軸回転ということになる。
 			drawer.cylinder(pipe_width*2.0f,pipejoint_length,8,drawable);
@@ -192,7 +195,46 @@ public class MyDonut{
 		gl.glPushMatrix();
 			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
 			glut.glutSolidTorus(0.30f,tire_rad,16,64);
-		gl.glPopMatrix();		
+		gl.glPopMatrix();	
+
+		//サドル
+		//int uiStacks, int uiSlices, float fA, float fB, float fC,GLAutoDrawable drawable
+		gl.glPushMatrix();
+			gl.glTranslatef(0,10.0f,0);
+			drawer.elipsoid(10,10,1,0.4f,1,drawable);
+		gl.glPopMatrix();
+
+		// 前輪のスポーク
+		float front_xcenter = pipefront_xtrans;
+		float front_ycenter = pipe4_ytrans;
+		float rear_xcenter = piperear_xtrans;
+		float rear_ycenter = front_ycenter;
+		float pipe_rad = pipe_width*2.0f;
+		float wheel_rad = tire_rad; // 後で内側にホイールをつけるかもしれないが。
+		float spoke_div = 9.0f; // 見た目的に、deg10の差にするなら18本のスポークがベストだった。
+		float degree_plus = (360.0f/spoke_div)/180*(float)Math.PI;
+		gl.glBegin(GL2.GL_LINES);
+			gl.glLineWidth(1.0f);
+			for(int i = 0; i <= spoke_div; i++){ // 前輪右回り
+				gl.glVertex3d(front_xcenter - pipe_rad*(float)Math.sin(degree10+degree_plus*i), front_ycenter + pipe_rad*(float)Math.cos(degree10+degree_plus*i), 0.0f);
+				gl.glVertex3d(front_xcenter + wheel_rad*(float)Math.sin(degree10-degree_plus*i), front_ycenter + wheel_rad*(float)Math.cos(degree10-degree_plus*i), 0.0f);
+			}
+			for(int i = 0; i <= spoke_div; i++){ // 前輪左回り
+				gl.glVertex3d(front_xcenter - pipe_rad*(float)Math.sin(-degree10+degree_plus*i), front_ycenter + pipe_rad*(float)Math.cos(-degree10+degree_plus*i), 0.0f);
+				gl.glVertex3d(front_xcenter + wheel_rad*(float)Math.sin(-degree10-degree_plus*i), front_ycenter + wheel_rad*(float)Math.cos(-degree10-degree_plus*i), 0.0f);
+			}
+			for(int i = 0; i <= spoke_div; i++){ // 後ろ右回り
+				gl.glVertex3d(rear_xcenter - pipe_rad*(float)Math.sin(degree10+degree_plus*i), rear_ycenter + pipe_rad*(float)Math.cos(degree10+degree_plus*i), 0.0f);
+				gl.glVertex3d(rear_xcenter + wheel_rad*(float)Math.sin(degree10-degree_plus*i), rear_ycenter + wheel_rad*(float)Math.cos(degree10-degree_plus*i), 0.0f);
+			}
+			for(int i = 0; i <= spoke_div; i++){ // 後ろ左回り
+				gl.glVertex3d(rear_xcenter - pipe_rad*(float)Math.sin(-degree10+degree_plus*i), rear_ycenter + pipe_rad*(float)Math.cos(-degree10+degree_plus*i), 0.0f);
+				gl.glVertex3d(rear_xcenter + wheel_rad*(float)Math.sin(-degree10-degree_plus*i), rear_ycenter + wheel_rad*(float)Math.cos(-degree10-degree_plus*i), 0.0f);
+			}
+			
+			gl.glEnd();
+
+
 
 	}
 }

@@ -33,8 +33,8 @@ public class CgDrawer implements GLEventListener {
         GL2 gl= drawable.getGL().getGL2();
 	    
         // Zバッファ法を有効にする
-		gl.glEnable(GL.GL_RGBA);
-		gl.glEnable(GL2.GL_DEPTH);
+				gl.glEnable(GL.GL_RGBA);
+				gl.glEnable(GL2.GL_DEPTH);
         gl.glEnable(GL2.GL_DOUBLE);
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_NORMALIZE);
@@ -117,7 +117,7 @@ public class CgDrawer implements GLEventListener {
 		gl.glLoadIdentity();
 
 		// 視点を設定する
-		glu.gluLookAt(20.0f, 20.0f, 50.0f,  /* カメラの座標 */
+		glu.gluLookAt(10.0f, 20.0f, 50.0f,  /* カメラの座標 */
 									0.0f, 0.0f, 0.0f, 	/* 注視点の座標 */
 									0.0f, 1.0f, 0.0f);  /* 画面の上方向を指すベクトル */
 		
@@ -166,6 +166,23 @@ public class CgDrawer implements GLEventListener {
 		gl.glEnd();
 	}
 	
+	public void elipsoid(int uiStacks, int uiSlices, float fA, float fB, float fC,GLAutoDrawable drawable){
+		GL2 gl = drawable.getGL().getGL2();
+		GLUgl2 glu = new GLUgl2();
+
+		float tStep = (float)Math.PI / (float)uiSlices;
+		float sStep = (float)Math.PI / (float)uiStacks;
+
+		//gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+		for(float t = -(float)Math.PI/2; t <= ((float)Math.PI/2)+.0001; t += tStep){
+			gl.glBegin(GL.GL_TRIANGLE_STRIP);
+				for(float s = -(float)Math.PI; s <= (float)Math.PI+.0001; s += sStep){
+					gl.glVertex3f(fA * (float)Math.cos(t) * (float)Math.cos(s), fB * (float)Math.cos(t) * (float)Math.sin(s), fC * (float)Math.sin(t));
+					gl.glVertex3f(fA * (float)Math.cos(t+tStep) * (float)Math.cos(s), fB * (float)Math.cos(t+tStep) * (float)Math.sin(s), fC * (float)Math.sin(t+tStep));
+				}
+			gl.glEnd();
+		}
+	}
 	
 	public GLAutoDrawable getGLAutoDrawable() {
 		return glAD;
