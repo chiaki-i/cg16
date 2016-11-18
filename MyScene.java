@@ -62,7 +62,7 @@ public class MyScene {
 	    gl.glPopMatrix();
 	  
 	  */
-	    // ドーナツを描画する
+	    // 自転車を描画する
 		gl.glPushMatrix();
 	    if(car1 != null) bike1.draw(drawable);
 	   gl.glPopMatrix();	  
