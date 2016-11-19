@@ -21,19 +21,20 @@ public class MyScene {
 	 */
 	public static void init() {
 		
-		 // 旗の初期化
-		 flag1 = new MyFlag();
+		// 旗の初期化
+		flag1 = new MyFlag();
 		 
-		 
-		 // 車の初期化および色・速度・変位の設定
-		 car1 = new MyCar();
-		 car1.setColor(1.0, 0.0, 0.0);
-		 car1.setVelocity(5);
-		 car1.setTransform(1.5);
+		// 車の初期化および色・速度・変位の設定
+		car1 = new MyCar();
+		car1.setColor(1.0, 0.0, 0.0);
+		car1.setVelocity(5);
+		car1.setTransform(1.5);
 		
 
-		 //とりあえず自転車を表示させておく
-		 bike1 = new MyMountainBike();
+		//とりあえず自転車を表示させておく
+		bike1 = new MyMountainBike();
+		bike1.setVelocity(5);
+		bike1.setDistance(2);
 
 	}
 	
@@ -47,6 +48,7 @@ public class MyScene {
 
 		 // 物体が裏面を向いていたとしても光を当てる
 		 gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE); 
+		
 		/*
 	    // 旗を描画する
 	    gl.glPushMatrix();
@@ -54,18 +56,19 @@ public class MyScene {
 	    	flag1.draw(drawable);
 	    gl.glPopMatrix();
 	 
+
 	    // 車を描画する
 	    
 		gl.glPushMatrix();
 	    if(car1 != null)
 	    	car1.draw(drawable);
 	    gl.glPopMatrix();
-	  
 	  */
+	  
 	    // 自転車を描画する
 		gl.glPushMatrix();
-	    if(car1 != null) bike1.draw(drawable);
-	   gl.glPopMatrix();	  
+	    if(bike1 != null) bike1.draw(drawable);
+	   gl.glPopMatrix();	
 	}
 	
 	/**
@@ -74,7 +77,7 @@ public class MyScene {
 	public static void resetMovement() {
 
 		// 車の回転を初期状態に戻す
-		car1.resetMovement();
+		bike1.resetMovement();
 	}
 	
 }

@@ -48,7 +48,7 @@ public class CgDrawer implements GLEventListener {
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, silver, 0);
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, silver, 0);
         
-        // 背景色を白にする
+        // 背景色をグレーにする
         gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         
 	}
@@ -73,8 +73,8 @@ public class CgDrawer implements GLEventListener {
         gl.glLoadIdentity();
         //glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
         //http://www.wakayama-u.ac.jp/~wuhy/GSS/04.htmlここみて
-        gl.glFrustum(200.0, 200.0, 100.0, 120.0, 50.0, 1000.0);
-        glu.gluPerspective(30.0, h, 1.0, 100.0);
+        //gl.glFrustum(200.0, 200.0, 100.0, 120.0, 50.0, 1000.0);
+        glu.gluPerspective(60.0, h, 1.0, 100.0);
                
         // ここから物体の幾何変換に関する設定
         gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -120,7 +120,7 @@ public class CgDrawer implements GLEventListener {
 		gl.glLoadIdentity();
 
 		// 視点を設定する
-		glu.gluLookAt(50.0f, 20.0f, 50.0f,  /* カメラの座標 */
+		glu.gluLookAt(20.0f, 20.0f, 50.0f,  /* カメラの座標 */
 									0.0f, 0.0f, 0.0f, 	/* 注視点の座標 */
 									0.0f, 1.0f, 0.0f);  /* 画面の上方向を指すベクトル */
 		
