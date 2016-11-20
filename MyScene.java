@@ -33,8 +33,10 @@ public class MyScene {
 
 		//とりあえず自転車を表示させておく
 		bike1 = new MyMountainBike();
-		bike1.setVelocity(5);
-		bike1.setDistance(2);
+		bike1.setVelocity_bike(5);
+		bike1.setVelocity_wheel(20);
+		bike1.setVelocity_front(3);
+		bike1.setDist_bike(2);
 
 	}
 	

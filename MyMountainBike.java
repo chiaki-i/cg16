@@ -64,120 +64,91 @@ public class MyMountainBike{
 	float spoke_div = 9.0f; // 見た目的に、deg10なら18本のスポークがベストだった。
 	float degree_plus = (360.0f/spoke_div)/180*(float)Math.PI;
 
-	// 車の回転運動しているときの回転角
-	static int r = 0;
+	static int r_bike = 0;// 車の回転運動しているときの回転角*10(整数値で取り扱う方が計算が楽)
+	static int r_wheel = 3600;
+	static int r_front = 0;
+	static int velocity_bike;// 車の角速度（に相当する値）
+	static int velocity_wheel;// 車輪の角速度(相当値)
+	static int velocity_front;
+	static float distance_bike = 0;// 自転車の、原点(0,0,0)からの変位
 
-	// 車の角速度（に相当する値）
-	static int velocity = 5;
-	
-	// 自転車の、原点(0,0,0)からの変位
-	static float distance_bike = 0;
+	public void setVelocity_bike(int v) {//自転車全体の速度は基本的にはタイヤの回転角に依存する。
+		velocity_bike = v;
+	}
 
-	//自転車全体の速度は基本的にはタイヤの回転角に依存する。
-	public void setVelocity(int v) {
-		velocity = v;
+	public void setVelocity_wheel(int v){
+		velocity_wheel = v;
 	}
 	
-	/**
-	 * 車の回転中心からの変位を設定する
-	 */
-	public void setDistance(float t) {
+	public void setVelocity_front(int v){
+		velocity_front = v;
+	}
+
+	public void setDist_bike(float t) {//自転車の回転中心からの変位を設定
 		distance_bike = t;
 	}
 	
-	/**
-	 * 車の回転核を計算する
-	 */  
-	static void calculateMovement() {  
-		r += velocity;
-	    if (r >= 3600) {
-	    	r = 0;
+	static void calMovement_bike() {  
+		r_bike += velocity_bike;
+	    if (r_bike >= 3600) {
+	    	r_bike = 0;
 	    }
 	}
 
-	//自転車の動きをリセットする
+	static void calMovement_wheel(){
+		r_wheel -= velocity_bike;
+	    if (r_wheel <= 0) {
+	    	r_wheel = 3600;
+	  	}
+	  }
+
+	static void calMovement_front(){
+
+		r_front += velocity_bike;
+	    if (r_front >= 540) {
+	    	r_front = 540;
+	  	}
+	  }
+
+	//自転車の、全ての動きをリセットする
 	static void resetMovement() {
-		r = 0;
+		r_bike = 0;
+		r_wheel = 3600;
 	}
 	
 
-	public void draw_fronttire(GLAutoDrawable drawable){
+	public void draw_tire(GLAutoDrawable drawable){
 		GL2 gl = drawable.getGL().getGL2();
 		GLUT glut = new GLUT();
 		CgDrawer drawer = new CgDrawer();
 
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, black, 0);
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, black, 0);
-
-		// 前輪
 		gl.glPushMatrix();
-			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, black, 0);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, black, 0);
 			glut.glutSolidTorus(0.30f,tire_rad,16,64);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, silvergray, 0);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, silvergray, 0);
+			glut.glutSolidTorus(0.1f,tire_rad*0.9f,16,64);
 		gl.glPopMatrix();	
+		gl.glPushMatrix();
+			gl.glRotatef(90.0f, 1,0,0);
+			drawer.cylinder(pipe_width*2.0f,piperear_length,8,drawable);
+		gl.glPopMatrix();
 
-		// 前輪スポーク
+		// スポーク
 		gl.glBegin(GL2.GL_LINES);
 			gl.glLineWidth(1.0f);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, black, 0);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, black, 0);
 			for(int i = 0; i < spoke_div; i++){ // 前輪右回り
-				gl.glVertex3d(front_xcenter - axle_rad*(float)Math.sin(degree10+degree_plus*i), front_ycenter + axle_rad*(float)Math.cos(degree10+degree_plus*i), 0.0f);
-				gl.glVertex3d(front_xcenter + wheel_rad*(float)Math.sin(degree10-degree_plus*i), front_ycenter + wheel_rad*(float)Math.cos(degree10-degree_plus*i), 0.0f);
+				gl.glVertex3d( - axle_rad*(float)Math.sin(degree10+degree_plus*i),  + axle_rad*(float)Math.cos(degree10+degree_plus*i), 0.0f);
+				gl.glVertex3d( + wheel_rad*(float)Math.sin(degree10-degree_plus*i),  + wheel_rad*(float)Math.cos(degree10-degree_plus*i), 0.0f);
 			}
 			for(int i = 0; i < spoke_div; i++){ // 前輪左回り
-				gl.glVertex3d(front_xcenter - axle_rad*(float)Math.sin(-degree10+degree_plus*i), front_ycenter + axle_rad*(float)Math.cos(-degree10+degree_plus*i), 0.0f);
-				gl.glVertex3d(front_xcenter + wheel_rad*(float)Math.sin(-degree10-degree_plus*i), front_ycenter + wheel_rad*(float)Math.cos(-degree10-degree_plus*i), 0.0f);
+				gl.glVertex3d( - axle_rad*(float)Math.sin(-degree10+degree_plus*i),  + axle_rad*(float)Math.cos(-degree10+degree_plus*i), 0.0f);
+				gl.glVertex3d( + wheel_rad*(float)Math.sin(-degree10-degree_plus*i),  + wheel_rad*(float)Math.cos(-degree10-degree_plus*i), 0.0f);
 			}
 		gl.glEnd();
-
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, silvergray, 0);
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, silvergray, 0);
-
-		// 前輪のホイール
-		gl.glPushMatrix();
-			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
-			glut.glutSolidTorus(0.1f,tire_rad*0.9f,16,64);
-		gl.glPopMatrix();	
-	}
-
-	public void draw_reartire(GLAutoDrawable drawable){
-		GL2 gl = drawable.getGL().getGL2();
-		GLUT glut = new GLUT();
-		CgDrawer drawer = new CgDrawer();
-
-		/**************
-				後輪
-		****************/
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, black, 0);
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, black, 0);
-
-		// 後輪
-		//glutSolidTorus(内側の半径,外側の半径,断面の分割数,リングの分割数)
-		gl.glPushMatrix();
-			gl.glTranslatef(piperear_xtrans, pipe4_ytrans, 0);
-			glut.glutSolidTorus(0.30f,tire_rad,16,64);
-		gl.glPopMatrix();
-
-
-		// 後輪スポーク
-		gl.glBegin(GL2.GL_LINES);
-			gl.glLineWidth(1.0f);
-			for(int i = 0; i < spoke_div; i++){ // 後ろ右回り
-				gl.glVertex3d(rear_xcenter - axle_rad*(float)Math.sin(degree10+degree_plus*i), rear_ycenter + axle_rad*(float)Math.cos(degree10+degree_plus*i), 0.0f);
-				gl.glVertex3d(rear_xcenter + wheel_rad*(float)Math.sin(degree10-degree_plus*i), rear_ycenter + wheel_rad*(float)Math.cos(degree10-degree_plus*i), 0.0f);
-			}
-			for(int i = 0; i < spoke_div; i++){ // 後ろ左回り
-				gl.glVertex3d(rear_xcenter - axle_rad*(float)Math.sin(-degree10+degree_plus*i), rear_ycenter + axle_rad*(float)Math.cos(-degree10+degree_plus*i), 0.0f);
-				gl.glVertex3d(rear_xcenter + wheel_rad*(float)Math.sin(-degree10-degree_plus*i), rear_ycenter + wheel_rad*(float)Math.cos(-degree10-degree_plus*i), 0.0f);
-			}
-		gl.glEnd();
-
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, silvergray, 0);
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, silvergray, 0);
-
-		// 後輪のホイール
-		gl.glPushMatrix();
-			gl.glTranslatef(piperear_xtrans, pipe4_ytrans, 0);
-			glut.glutSolidTorus(0.1f,tire_rad*0.9f,16,64);
-		gl.glPopMatrix();
 	}
 
 	public void draw_frontbody(GLAutoDrawable drawable){
@@ -185,7 +156,12 @@ public class MyMountainBike{
 		GLUT glut = new GLUT();
 		CgDrawer drawer = new CgDrawer();
 
-		draw_fronttire(drawable);//前輪は前半分と一緒。	
+		gl.glPushMatrix();
+			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
+			gl.glRotatef((r_wheel * 0.1f), 0, 0, 1);
+			draw_tire(drawable);//前輪	
+			calMovement_wheel();
+		gl.glPopMatrix();
 
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, darkgreen, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, darkgreen, 0);
@@ -262,16 +238,30 @@ public class MyMountainBike{
 		gl.glPopMatrix();
 	}
 
-
 	public void draw_body(GLAutoDrawable drawable){
 		GL2 gl = drawable.getGL().getGL2();
 		GLUT glut = new GLUT();
 		CgDrawer drawer = new CgDrawer();
 
-		draw_frontbody(drawable);//前半分も描画。
+		gl.glPushMatrix();
+			gl.glTranslatef(pipejoint_xtrans, pipe1_ytrans, 0);		
+			gl.glRotatef(10.0f,0,0,1);
+			gl.glRotatef((r_front * 0.1f), 0, 1, 0);
+			gl.glRotatef(-10.0f,0,0,1);
+			gl.glTranslatef(-pipejoint_xtrans, -pipe1_ytrans, 0);
+			draw_frontbody(drawable);//前半分も描画。
+			calMovement_front();
+		gl.glPopMatrix();
+
 		draw_pedal(drawable);
-		draw_reartire(drawable);
-		
+
+		gl.glPushMatrix();
+			gl.glTranslatef(piperear_xtrans, pipe4_ytrans, 0);
+			gl.glRotatef((r_wheel * 0.1f), 0, 0, 1);
+			draw_tire(drawable);//後輪。
+			calMovement_wheel();
+		gl.glPopMatrix();
+
 		// パイプ１本目 z軸周りに回転 = xy平面上での原点中心回転
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, darkgreen, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, darkgreen, 0);
@@ -344,20 +334,6 @@ public class MyMountainBike{
 			drawer.cylinder(pipe_width,pipesaddle_length*0.8f,6,drawable);
 		gl.glPopMatrix();
 
-		// 後輪の車軸
-		gl.glPushMatrix();
-			gl.glTranslatef(piperear_xtrans, pipe4_ytrans, 0);
-			gl.glRotatef(90.0f, 1,0,0);// ZY平面上で倒したいので、X軸回転ということになる。
-			drawer.cylinder(pipe_width*2.0f,piperear_length*1.2f,8,drawable);
-		gl.glPopMatrix();
-
-		// 前輪の車軸
-		gl.glPushMatrix();
-			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
-			gl.glRotatef(90.0f, 1,0,0);
-			drawer.cylinder(pipe_width*2.0f,piperear_length,8,drawable);
-		gl.glPopMatrix();
-
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, black, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, black, 0);
 
@@ -383,19 +359,19 @@ public class MyMountainBike{
 		gl.glPopMatrix();
 
 		gl.glPushMatrix();
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, silvergray, 1);
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, silvergray, 1);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, silvergray, 1);
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, silvergray, 1);
 			gl.glTranslatef(0, -front_ycenter+tire_rad, 0);
 			glut.glutSolidTeapot(0.5f);
 		gl.glPopMatrix();
 
 		gl.glPushMatrix();		
 			// 車の変位を求める
-			gl.glRotatef((r * 0.1f), 0, 1, 0);
+			gl.glRotatef((r_bike * 0.1f), 0, 1, 0);
 			gl.glTranslatef(0, (-front_ycenter)+tire_rad, distance_bike);
 			draw_body(drawable);	
 			// 回転角を算出する
-			calculateMovement();
+			calMovement_bike();
 		gl.glPopMatrix();
 	}
 }
