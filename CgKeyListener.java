@@ -30,6 +30,36 @@ public class CgKeyListener implements KeyListener {
 			MyScene.resetMovement();
 			canvas.display();
 			break;
+
+		// "1"を押した時
+		case KeyEvent.VK_1:
+			if(MyMountainBike.flag == MyMountainBike.STRAIGHT){}//何も起きない
+			else{
+				MyScene.resetMovement();
+				MyMountainBike.setFlag(MyMountainBike.STRAIGHT);
+				canvas.display();
+			}
+			break;
+
+		// "2"を押した時
+		case KeyEvent.VK_2:
+			if(MyMountainBike.flag == MyMountainBike.CIRCLE){}//何も起きない
+			else{
+				MyScene.resetMovement();
+				MyMountainBike.setFlag(MyMountainBike.CIRCLE);
+				canvas.display();
+			}
+			break;
+
+		// "3"を押した時
+		case KeyEvent.VK_3:
+			if(MyMountainBike.flag == MyMountainBike.LISSAJOUS){}//何も起きない
+			else{
+				MyScene.resetMovement();
+				MyMountainBike.setFlag(MyMountainBike.LISSAJOUS);
+				canvas.display();
+			}
+			break;
 		}
 		
 	}
