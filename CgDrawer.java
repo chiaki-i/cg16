@@ -240,7 +240,7 @@ public class CgDrawer implements GLEventListener {
 			z_prv = z_crt;
 		}
 	}
-		public void lissajous(float rad,float lissx,float lissz,float alpha,float beta,GLAutoDrawable drawable){
+		public void lissajous(float rad,float lissx,float lissz,float alpha,float beta,GLAutoDrawable drawable){//リサージュ図形でのprvからcrtまでの何かを返す？
 		GL2 gl = drawable.getGL().getGL2();
 		GLUT glut = new GLUT();
 

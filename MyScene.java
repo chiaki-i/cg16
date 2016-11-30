@@ -4,10 +4,11 @@
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 
 public class MyScene {
-	
+
 	static MyField field1 = null;
 	static MyMountainBike bike1 = null;
 
@@ -15,20 +16,22 @@ public class MyScene {
 	 * シーンの初期化
 	 */
 	public static void init() {
-		
+		GLUT glut = new GLUT();	
 		//地面
 		field1 = new MyField();
 
 		//とりあえず自転車を表示させておく
 		bike1 = new MyMountainBike();
-		bike1.setDist_bike(20);
+		bike1.setDist_bike(0);
 		bike1.setVelocity_bike(5);
 		bike1.setVelocity_wheel(20);
 		bike1.setVelocity_front(3);
 		bike1.setFlag(bike1.LISSAJOUS);
 
+		//glut.glutSwapBuffers();
 	}
 	
+
 	/**
 	 * シーンを描画する
 	 */

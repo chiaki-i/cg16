@@ -33,10 +33,14 @@ public class CgKeyListener implements KeyListener {
 
 		// "1"を押した時
 		case KeyEvent.VK_1:
-			if(MyMountainBike.flag == MyMountainBike.STRAIGHT){}//何も起きない
+			if(MyMountainBike.flag == MyMountainBike.STRAIGHT){}//そのままだと何も起きない
 			else{
 				MyScene.resetMovement();
 				MyMountainBike.setFlag(MyMountainBike.STRAIGHT);
+				MyMountainBike.setDist_bike(0);
+				MyMountainBike.setVelocity_bike(9);
+				MyMountainBike.setVelocity_wheel(30);
+				MyMountainBike.setVelocity_front(0);
 				canvas.display();
 			}
 			break;
