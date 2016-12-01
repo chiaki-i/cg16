@@ -39,8 +39,9 @@ public class CgKeyListener implements KeyListener {
 				MyMountainBike.setFlag(MyMountainBike.STRAIGHT);
 				MyMountainBike.setDist_bike(0);
 				MyMountainBike.setVelocity_bike(9);
-				MyMountainBike.setVelocity_wheel(30);
+				MyMountainBike.setVelocity_wheel(45);
 				MyMountainBike.setVelocity_front(0);
+				MyField.setFlag(MyField.FLOWER);
 				canvas.display();
 			}
 			break;
@@ -51,6 +52,11 @@ public class CgKeyListener implements KeyListener {
 			else{
 				MyScene.resetMovement();
 				MyMountainBike.setFlag(MyMountainBike.CIRCLE);
+				MyMountainBike.setDist_bike(20);
+				MyMountainBike.setVelocity_bike(9);
+				MyMountainBike.setVelocity_wheel(30);
+				MyMountainBike.setVelocity_front(3);
+				MyField.setFlag(MyField.FLOWER);
 				canvas.display();
 			}
 			break;
@@ -61,9 +67,26 @@ public class CgKeyListener implements KeyListener {
 			else{
 				MyScene.resetMovement();
 				MyMountainBike.setFlag(MyMountainBike.LISSAJOUS);
+				MyMountainBike.setDist_bike(0);
+				MyMountainBike.setVelocity_bike(5);
+				MyMountainBike.setVelocity_wheel(20);
+				MyMountainBike.setVelocity_front(3);
+				MyField.setFlag(MyField.FLOWER);
 				canvas.display();
 			}
 			break;
+
+		// "L"を押した時
+		case KeyEvent.VK_L:
+			if(MyField.flag == MyField.GUIDELINE){
+				MyField.setFlag(MyField.FLOWER);
+				canvas.display();
+			}
+			else if(MyField.flag == MyField.FLOWER){
+				MyField.setFlag(MyField.GUIDELINE);
+				canvas.display();
+			}
+			break;			
 		}
 		
 	}

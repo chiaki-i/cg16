@@ -8,7 +8,7 @@ import java.lang.Math;
 public class MyMountainBike{
 
 	float sunflower[]  = { 1.0f, 0.945098039f, 0.058823529f, 1.0f };
-	float darkgreen[]  = { 0.156862745f, 0.639215686f, 0.043137255f, 1.0f };
+	float darkgreen[]  = { 0.0f, 0.5f, 0.0f, 1.0f };
 	float olive[]      = { 0.388235294f, 0.48627451f, 0.207843137f, 1.0f };
 	float silvergray[] = { 0.647058824f, 0.647058824f, 0.647058824f, 1.0f };
 	float black[]      = { 0.149019608f, 0.149019608f, 0.149019608f, 1.0f };
@@ -64,19 +64,19 @@ public class MyMountainBike{
 	float degree_plus   = (360.0f/spoke_div)/180*(float)Math.PI;
 
 	//アニメーション
-	float x_crt, x_bike;
-	float z_crt, z_bike;
+	static float x_crt, x_bike;
+	static float z_crt, z_bike;
 	static int rad = 20, lissx = 1, lissz = 1, alpha = 3, beta = 4;//1,2だと8の字、3,4だと地面の模様と同じになる
 	static int r1 = 0;
 	static int r2;
-	static float r1_rad, r2_rad, rotate_bike;
-	float x_prv = rad*(float)Math.cos(0*alpha)*lissx;
-	float z_prv = rad*(float)Math.sin(0*beta)*lissz;
+	static float rad_temp, r2_rad, r3_rad, rotate_bike;
+	static float x_prv = rad*(float)Math.cos(0*alpha)*lissx;
+	static float z_prv = rad*(float)Math.sin(0*beta)*lissz;
 
 	static int r_bike = 0;// 車の回転運動しているときの回転角*10(整数値で取り扱う方が計算が楽)
 	static int t_bike = 0;
 	static int r_wheel = 3600;
-	static int r_front = 0;
+	static float r_front = 0;
 	static int velocity_bike_rotate;// 車の角速度（に相当する値）
 	static float velocity_bike_straight;// 直線での速度	
 	static int velocity_wheel;// 車輪の角速度(相当値)
@@ -110,7 +110,6 @@ public class MyMountainBike{
 	}
 
 	public void calMovement_bike(int flag, int dist) {
-		//GL2 gl = drawable.getGL().getGL2();
 		if(flag == STRAIGHT){
 			r_bike += velocity_bike_rotate;
 			if(r_bike >= 3600){
@@ -119,7 +118,7 @@ public class MyMountainBike{
 			else if(r_bike >= 1800 && r_bike < 3600){//後退
 				t_bike -= velocity_bike_straight;
 				if(t_bike <= -velocity_bike_straight*(r_bike/velocity_bike_rotate/2)) {
-					t_bike = (int)Math.ceil(-velocity_bike_straight*(r_bike/velocity_bike_rotate/2));
+					t_bike = (int)Math.floor(-velocity_bike_straight*(r_bike/velocity_bike_rotate/2));
 				}
 			}
 			else if(r_bike > 0 && r_bike < 1800){//前進
@@ -139,38 +138,33 @@ public class MyMountainBike{
 			if (r_bike < 3600){
 				r_bike += velocity_bike_rotate;
 				r2_rad = (float)Math.toRadians(r_bike/10);
-				x_crt = dist*0.020f*(float)Math.cos(r2_rad*alpha)*lissx;
-				z_crt = dist*0.020f*(float)Math.sin(r2_rad*beta)*lissz;
-				/*
-				if (x_crt >= x_prv && z_crt >= z_prv){ //XZ平面第１象限
-					rotate_bike = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv));
-				}
-				else if (x_crt >= x_prv && z_crt < z_prv){ //XZ平面第２象限
-					rotate_bike = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv));
-				}
-				else if (x_crt < x_prv && z_crt < z_prv){ //XZ平面第３象限
-					rotate_bike = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv));
-				}
-				else{ //XZ平面第４象限
-					rotate_bike = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv));
-				}
-				*/
-				if (z_crt > z_prv){ //XZ平面第１象限
-					rotate_bike = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv))+180;
+				x_crt = 20*(float)Math.cos(r2_rad*alpha)*lissx;
+				z_crt = 20*(float)Math.sin(r2_rad*beta)*lissz;
+				rad_temp = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv));
+				if (z_crt  > z_prv){ 
+					if(rad_temp+180 > 85 && rad_temp+180 < 90){
+						rotate_bike = 85;
+					}else{
+						rotate_bike = rad_temp + 180;
+					}
 				}else{
-					rotate_bike = (float)Math.toDegrees((x_crt - x_prv)/(z_crt - z_prv));
+					if(rad_temp > 85 && rad_temp < 90){
+						rotate_bike = 85;
+					}else{
+						rotate_bike = rad_temp;
+					}
 				}
+				x_prv = x_crt;
+				z_prv = z_crt;
 			}else{
 				r_bike = 0;
 			}
-			x_prv = x_crt;
-			z_prv = z_crt;
 		}
 	}
 	
 
 	static void calMovement_wheel(int flag){
-		while(flag == STRAIGHT){
+		if(flag == STRAIGHT){
 			if(r_wheel >= 0){
 				if(r_bike >= 3600){
 					r_wheel = r_wheel;
@@ -187,7 +181,14 @@ public class MyMountainBike{
 		  }
 		  flag = 0;
 		}
-		while(flag == LISSAJOUS || flag == CIRCLE){
+		else if(flag == CIRCLE){
+			r_wheel -= velocity_bike_rotate;
+		  if (r_wheel <= 0) {
+		  	r_wheel = 3600;
+		  }
+		  flag = 0;
+		}
+		else if(flag == LISSAJOUS){
 			r_wheel -= velocity_bike_rotate;
 		  if (r_wheel <= 0) {
 		  	r_wheel = 3600;
@@ -200,14 +201,13 @@ public class MyMountainBike{
 		float slope;
 		if (flag == CIRCLE){
 			r_front += velocity_bike_rotate;
-			if (r_front >= 450) {
-				r_front = 450;
+			if (r_front >= 30) {
+				r_front = 30;
 			}
 		}
 		if (flag == LISSAJOUS){
-			//r2_rad = (float)Math.toRadians(r_bike/10);
-			//slope = 10*(float)Math.toDegrees((beta*(float)Math.cos(r2_rad*beta)) / (alpha*(float)Math.cos(r2_rad*alpha)));//0で[を]割る危険性？
-			//r_front = (int)slope;
+			r3_rad = (float)Math.toRadians((r_bike+5)/10);//前輪はサドルよりも5度くらい先の値を使って回転をする
+			r_front = -(float)Math.toDegrees((alpha*(float)Math.cos(r2_rad*alpha)) / (beta*(float)Math.cos(r2_rad*beta)));				
 		}
 	}
 
@@ -264,8 +264,6 @@ public class MyMountainBike{
 
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, darkgreen, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, darkgreen, 0);
-		gl.glColor3f(darkgreen[0], darkgreen[1], darkgreen[2]);
-
 		gl.glPushMatrix();
 			gl.glTranslatef(pipefront_xtrans, pipe4_ytrans, 0);
 			gl.glRotatef((r_wheel * 0.1f), 0, 0, 1);
@@ -273,6 +271,8 @@ public class MyMountainBike{
 			calMovement_wheel(flag);
 		gl.glPopMatrix();
 
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, darkgreen, 0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, darkgreen, 0);
 		// 8本目 前輪 カラーパイプ
 		gl.glPushMatrix();
 			gl.glTranslatef(pipe8_xtrans, pipe8_ytrans, 0);
@@ -368,7 +368,7 @@ public class MyMountainBike{
 		gl.glPushMatrix();
 			gl.glTranslatef(pipejoint_xtrans, pipe1_ytrans, 0);		
 			gl.glRotatef(10.0f,0,0,1);
-			gl.glRotatef((r_front * 0.1f), 0, 1, 0);
+			gl.glRotatef(r_front, 0, 1, 0);
 			gl.glRotatef(-10.0f,0,0,1);
 			gl.glTranslatef(-pipejoint_xtrans, -pipe1_ytrans, 0);
 			draw_frontbody(drawable);//前半分も描画。
@@ -387,7 +387,7 @@ public class MyMountainBike{
 		// パイプ１本目 z軸周りに回転 = xy平面上での原点中心回転
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, darkgreen, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, darkgreen, 0);
-		gl.glColor3f(darkgreen[0], darkgreen[1], darkgreen[2]);
+		//gl.glColor3f(darkgreen[0], darkgreen[1], darkgreen[2]);
 		gl.glPushMatrix();
 			gl.glTranslatef(pipe1_xtrans, pipe1_ytrans, 0);
 			gl.glRotatef(-80.0f,0,0,1);
@@ -458,7 +458,7 @@ public class MyMountainBike{
 
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, black, 0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, black, 0);
-		gl.glColor3f(black[0], black[1], black[2]);
+		//gl.glColor3f(black[0], black[1], black[2]);
 
 		//サドル
 		gl.glPushMatrix();
@@ -490,6 +490,6 @@ public class MyMountainBike{
 			gl.glTranslatef(0, (-front_ycenter)+tire_rad+0.15f, 0);
 			draw_body(drawable);	
 		gl.glPopMatrix();
-		gl.glFlush();
+		drawable.swapBuffers();
 	}
 }

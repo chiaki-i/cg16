@@ -99,7 +99,7 @@ public class CgDrawer implements GLEventListener {
   	gl.glMatrixMode(GL2.GL_PROJECTION);
   	gl.glLoadIdentity();
         //glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
-        //http://www.wakayama-u.ac.jp/~wuhy/GSS/04.htmlここみて
+        //http://www.wakayama-u.ac.jp/~wuhy/GSS/04.html
         //gl.glFrustum(200.0, 200.0, 100.0, 120.0, 50.0, 1000.0);
   	glu.gluPerspective(60.0, h, 1.0, 100.0);
 
@@ -138,7 +138,7 @@ public class CgDrawer implements GLEventListener {
   	gl.glLoadIdentity();
 
 		// 視点を設定する
-  	glu.gluLookAt(0.0f, 20.0f, 50.0f,  /* カメラの座標 */
+  	glu.gluLookAt(0.0f, 30.0f, 60.0f,  /* カメラの座標 */
   		0.0f, 0.0f, 0.0f, 	/* 注視点の座標 */
   		0.0f, 1.0f, 0.0f);  /* 画面の上方向を指すベクトル */
 
@@ -204,18 +204,7 @@ public class CgDrawer implements GLEventListener {
 			gl.glEnd();
 		}
 	}
-/*
-	public void mytube(int slices, ){
-		GL2 gl = drawable.getGL().getGL2();
-		GLUgl2 glu = new GLUgl2();
 
-		//関数引数はとりあえず保留にして、関数をここで定義することにする
-		for (int i = 0; i < slices; i++) {
-						
-		}
-
-	}
-	*/
 	public void oval(float rad,float ovalx,float ovalz,GLAutoDrawable drawable){
 		GL2 gl = drawable.getGL().getGL2();
 		GLUT glut = new GLUT();
@@ -248,14 +237,14 @@ public class CgDrawer implements GLEventListener {
 		float z_prv = rad*(float)Math.sin(0*beta)*lissz;
 
 		gl.glLineWidth(1.0f); 
-		for (int r1 = 0; r1 < 360; r1++){  
-			float r2 = r1 + 1;
-			float r1_rad = r1 / 180 * (float)Math.PI; 
-			float r2_rad = r2 / 180 * (float)Math.PI;
+			for (int r1 = 0; r1 < 360; r1++){  
+				float r2 = r1 + 1;
+				float r1_rad = r1 / 180 * (float)Math.PI; 
+				float r2_rad = r2 / 180 * (float)Math.PI;
 
-			float x_crt = rad*(float)Math.cos(r2_rad*alpha)*lissx;
-			float z_crt = rad*(float)Math.sin(r2_rad*beta)*lissz;
-			gl.glBegin(GL2.GL_LINE_STRIP); 
+				float x_crt = rad*(float)Math.cos(r2_rad*alpha)*lissx;
+				float z_crt = rad*(float)Math.sin(r2_rad*beta)*lissz;
+						gl.glBegin(GL2.GL_LINE_STRIP); 
 				gl.glVertex3d( x_prv, 0.0f, z_prv );     
 				gl.glVertex3d( x_crt, 0.0f, z_crt );
 			gl.glEnd();

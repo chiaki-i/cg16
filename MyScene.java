@@ -17,18 +17,18 @@ public class MyScene {
 	 */
 	public static void init() {
 		GLUT glut = new GLUT();	
+
 		//地面
 		field1 = new MyField();
+		field1.setFlag(field1.FLOWER);
 
 		//とりあえず自転車を表示させておく
 		bike1 = new MyMountainBike();
 		bike1.setDist_bike(0);
-		bike1.setVelocity_bike(5);
-		bike1.setVelocity_wheel(20);
+		bike1.setVelocity_bike(9);
+		bike1.setVelocity_wheel(45);
 		bike1.setVelocity_front(3);
-		bike1.setFlag(bike1.LISSAJOUS);
-
-		//glut.glutSwapBuffers();
+		bike1.setFlag(bike1.STRAIGHT);
 	}
 	
 
@@ -39,6 +39,7 @@ public class MyScene {
 		if(drawable == null) return;
 		
 		GL2 gl = drawable.getGL().getGL2();
+		drawable.setAutoSwapBufferMode(false);//追加
 
 		 // 物体が裏面を向いていたとしても光を当てる
 		 gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE); 

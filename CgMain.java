@@ -7,7 +7,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import javax.media.opengl.awt.GLCanvas;
-
+import javax.media.opengl.GLAutoDrawable;
 import com.jogamp.opengl.util.Animator;
 
 public class CgMain extends JApplet {
@@ -68,7 +68,7 @@ public class CgMain extends JApplet {
 	 * メインメソッド
 	 */
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("um...");
+		JFrame frame = new JFrame("bicycle");
 		frame.setSize(width, height);
 		CgMain cgmain = new CgMain(); 
 
